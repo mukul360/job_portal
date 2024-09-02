@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_1351122_app.appUtils</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>appUtils</name>
+        <script><![CDATA[var appUtils = Class.create();
+appUtils.prototype = {
+    initialize: function() {
+    },
+    getCatItems: function(parentCats) {
+        var catArray = parentCats.split(",");
+        for (var i in catArray) {
+            catArray = this.getAllCatFromParent(catArray[i], catArray);
+        }
+        var queryStr = "";
+        for (var j in catArray) {
+            queryStr = queryStr + "category=" + catArray[j] + "^OR";
+        }
+        if (queryStr == "") {
+            return "";
+        }
+        var catItemsString = "";
+        var catItem = new GlideRecord("sc_cat_item");
+        catItem.addEncodedQuery(queryStr);
+        catItem.query();
+        while (catItem.next()) {
+            catItemsString = catItemsString + catItem.getUniqueValue() + ',';
+        }
+        return catItemsString;
+    },
+	getAllCatFromParent: function(parentCat, catArray) {
+        var getCat = new GlideRecord("sc_category");
+        getCat.addQuery("parent", parentCat);
+        getCat.query();
+        while (getCat.next()) {
+            var currentCat = getCat.getUniqueValue();
+            catArray.push(currentCat);
+            catArray = this.getAllCatFromParent(currentCat, catArray);
+        }
+        return catArray;
+    },
+    type: 'appUtils'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-08-23 09:46:53</sys_created_on>
+        <sys_id>86ff27bf83ccd210d58c7f29feaad396</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>appUtils</sys_name>
+        <sys_package display_value="superappcontroller" source="x_1351122_app">c37df27b830cd210d58c7f29feaad3c6</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="superappcontroller">c37df27b830cd210d58c7f29feaad3c6</sys_scope>
+        <sys_update_name>sys_script_include_86ff27bf83ccd210d58c7f29feaad396</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-08-23 09:46:53</sys_updated_on>
+    </sys_script_include>
+</record_update>
